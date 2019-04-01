@@ -31,6 +31,9 @@ typedef struct _MonoAppContext MONO_RT_MANAGED_ATTR MonoAppContext;
 struct _MonoObject {
 	MonoVTable *vtable;
 	MonoThreadsSync *synchronisation;
+	int minor_gc_count_start;
+	int minor_gc_count_end;
+	int orig_major_gc_count;
 };
 
 typedef MonoObject* (*MonoInvokeFunc)	     (MonoMethod *method, void *obj, void **params, MonoObject **exc, MonoError *error);

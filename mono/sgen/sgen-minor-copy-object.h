@@ -122,6 +122,9 @@ SERIAL_COPY_OBJECT (GCObject **obj_slot, SgenGrayQueue *queue)
 
 	HEAVY_STAT (++stat_objects_copied_nursery);
 
+	obj->minor_gc_count_end = mono_atomic_load_i32 (&mono_gc_stats.minor_gc_count);
+	obj->orig_major_gc_count = mono_atomic_load_i32 (&mono_gc_stats.major_gc_count);
+
 #ifdef SGEN_SIMPLE_PAR_NURSERY
 	copy = copy_object_no_checks_par (obj, queue);
 #else
@@ -231,6 +234,9 @@ SERIAL_COPY_OBJECT_FROM_OBJ (GCObject **obj_slot, SgenGrayQueue *queue)
 #endif
 
 	HEAVY_STAT (++stat_objects_copied_nursery);
+
+	obj->minor_gc_count_end = mono_atomic_load_i32 (&mono_gc_stats.minor_gc_count);
+	obj->orig_major_gc_count = mono_atomic_load_i32 (&mono_gc_stats.major_gc_count);
 
 #ifdef SGEN_SIMPLE_PAR_NURSERY
 	copy = copy_object_no_checks_par (obj, queue);

@@ -2442,6 +2442,14 @@ mono_gc_collection_count (int generation)
 	return sgen_gc_collection_count (generation);
 }
 
+int
+mono_gc_get_age (MonoObject* obj)
+{
+	if (sgen_ptr_in_nursery (obj))
+		return (sgen_gc_collection_count(GENERATION_NURSERY) - obj->minor_gc_count_start);
+	return (sgen_gc_collection_count(GENERATION_OLD) - obj->orig_major_gc_count + obj->minor_gc_count_end - obj->minor_gc_count_start);
+}
+
 int64_t
 mono_gc_get_used_size (void)
 {

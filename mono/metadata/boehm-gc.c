@@ -758,6 +758,10 @@ mono_gc_alloc_obj (MonoVTable *vtable, size_t size)
 	if (G_UNLIKELY (mono_profiler_allocations_enabled ()))
 		MONO_PROFILER_RAISE (gc_allocation, (obj));
 
+	obj->minor_gc_count_start = mono_atomic_load_i32 (&mono_gc_stats.minor_gc_count);
+	obj->minor_gc_count_end = -1;
+	obj->orig_major_gc_count = -1;
+
 	return obj;
 }
 
@@ -791,6 +795,10 @@ mono_gc_alloc_vector (MonoVTable *vtable, size_t size, uintptr_t max_length)
 
 	if (G_UNLIKELY (mono_profiler_allocations_enabled ()))
 		MONO_PROFILER_RAISE (gc_allocation, (&obj->obj));
+
+	obj->obj.minor_gc_count_start = mono_atomic_load_i32 (&mono_gc_stats.minor_gc_count);
+	obj->obj.minor_gc_count_end = -1;
+	obj->obj.orig_major_gc_count = -1;
 
 	return obj;
 }
